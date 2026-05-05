@@ -12,13 +12,13 @@ pipeline {
         stage('SonarQube Analysis') {
             agent {
                 docker {
-                    image 'node:18'
+                    image 'sonarsource/sonar-scanner-cli'
                 }
             }
             steps {
                 withSonarQubeEnv('sonar-server') {
                     sh '''
-                    npx sonar-scanner \
+                    sonar-scanner \
                     -Dsonar.projectKey=frontend-app \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=http://3.231.24.74:9000 \
