@@ -22,8 +22,11 @@ pipeline {
                 # Wait for app to start
                 sleep 5
 
-                # Health check
-                curl -f http://localhost:5000 || exit 1
+                # Get container IP
+                CONTAINER_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' test-container)
+
+                # Health check using container IP
+                curl -f http://$CONTAINER_IP || exit 1
 
                 # Cleanup
                 docker stop test-container
