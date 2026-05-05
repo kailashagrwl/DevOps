@@ -22,7 +22,7 @@ pipeline {
                     -Dsonar.projectKey=frontend-app \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=http://3.231.24.74:9000 \
-                    -Dsonar.login=$SONAR_AUTH_TOKEN
+                    -Dsonar.login=${SONAR_AUTH_TOKEN}
                     '''
                 }
             }
