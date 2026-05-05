@@ -3,33 +3,30 @@ pipeline {
 
     stages {
 
-        stage('Build (Static)') {
-            steps {
-                echo 'No build needed for static project'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            agent {
-                docker {
-                    image 'sonarsource/sonar-scanner-cli'
-                }
-            }
-            steps {
-                withSonarQubeEnv('sonar-server') {
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=frontend-app \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=http://3.231.24.74:9000 \
-                    '''
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t my-app .'
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                sh '''
+                docker run -d -p 5000:80 --name test-container my-app
+                sleep 5
+                curl -f http://localhost:5000 || exit 1
+                docker stop test-container && docker rm test-container
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                docker stop my-container || true
+                docker rm my-container || true
+                docker run -d -p 80:80 --name my-container my-app
+                '''
             }
         }
     }
