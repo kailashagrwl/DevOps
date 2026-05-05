@@ -10,6 +10,11 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
+            agent {
+                docker {
+                    image 'node:18'
+                }
+            }
             steps {
                 withSonarQubeEnv('sonar-server') {
                     sh '''
