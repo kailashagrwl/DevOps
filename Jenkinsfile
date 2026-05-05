@@ -1,21 +1,11 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-        }
-    }
+    agent any
 
     stages {
 
-        stage('Install Dependencies') {
+        stage('Build (Static)') {
             steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Build App') {
-            steps {
-                sh 'npm run build'
+                echo 'No build needed for static project'
             }
         }
 
